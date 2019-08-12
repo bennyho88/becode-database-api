@@ -29,21 +29,21 @@ $clean_author = filter_var($_POST['author'], FILTER_SANITIZE_STRING);
 // Validating
 
 if ($clean_title === false) {
-    echo 'a title is required';
+    echo 'a title is required <br>';
 } else {
-    echo 'title is valid';
+    echo 'title is valid <br>';
 }
 
 if ($clean_note === false) {
-    echo 'a note is required';
+    echo 'a note is required <br>';
 } else {
-    echo 'note is valid';
+    echo 'note is valid <br>';
 }
 
 if ($clean_author === false) {
-    echo 'an author is required';
+    echo 'an author is required <br>';
 } else {
-    echo 'author is valid';
+    echo 'author is valid <br>';
 }
 // INSERT INTO
 
@@ -58,8 +58,16 @@ if ($conn->query($sql) === TRUE) {
 
 // JSON
 
+$sql = "SELECT * FROM notes_tb";
+$result = mysqli_query($conn, $sql);
+$json_array = array();
+while($row = mysqli_fetch_assoc($result)) {
+$json_array[] = $row;
+}
+echo json_encode($json_array);
 
 $conn->close();
+
 
 
 
