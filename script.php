@@ -1,5 +1,6 @@
 <?php
 
+
 // CONNECTION WORKS
 $servername = "localhost";
 $username = "admin";
@@ -66,9 +67,12 @@ $json_array[] = $row;
 }
 echo json_encode($json_array);
 
-$conn->close();
+// echo '<pre>';
+// print_r($json_array);
 
 
+
+include 'delete.php';
 
 
 ?>
