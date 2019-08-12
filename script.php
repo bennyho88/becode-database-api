@@ -1,5 +1,6 @@
 <?php
 
+// CONNECTION WORKS
 $servername = "localhost";
 $username = "admin";
 $password = "eP325IJeAZmR";
@@ -13,65 +14,51 @@ if ($conn->connect_error) {
 } 
 
 // GET parameters;
-/*
-echo $_GET['title'];
-echo $_POST['note'];
-*/
-$stmt = $conn->prepare("INSERT INTO notes_tb (title, note) VALUES (?, ?)");
-$stmt->bind_param("ss", $title, $note);
 
-// set parameters and execute
 $title = $_GET['title'];
-$note = $_GET['note'];
+$note = $_POST['note'];
+$author = $_POST['author'];
 
-$stmt->execute();
+// Sanitizing
 
-echo "New records created successfully";
+$clean_title = filter_var($_GET['title'], FILTER_SANITIZE_STRING);
+$clean_note = filter_var($_POST['note'], FILTER_SANITIZE_STRING);
+$clean_author = filter_var($_POST['author'], FILTER_SANITIZE_STRING);
 
-$stmt->close();
-$conn->close();
 
-/*
-// SANITIZE
-$title = test_input($_GET['title']);
-$note = test_input($_GET['note']);
-$author = test_input($_GET['author']);
-$time = test_input($_GET['created_at']);
+// Validating
 
-function test_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
+if ($clean_title === false) {
+    echo 'a title is required';
+} else {
+    echo 'title is valid';
 }
 
-// validation
+if ($clean_note === false) {
+    echo 'a note is required';
+} else {
+    echo 'note is valid';
+}
 
-    if (empty($_GET['title'])) {
-       echo 'Title is required';
-    } else if(!preg_match("/^[a-zA-Z' ]*$/", $title)) {
-        echo  "Only letters and white space allowed";
-    }
-    
-    
-    if (empty($_GET['note'])) {
-        echo 'note is required'; 
-    } else {
-        echo 'ok';
-    }
+if ($clean_author === false) {
+    echo 'an author is required';
+} else {
+    echo 'author is valid';
+}
+// INSERT INTO
 
-    if (empty($_GET['author'])) {
-         echo 'Address is required'; 
-    } else if (!preg_match("/^[a-zA-Z' ]*$/", $author)) {
-        echo  "Only letters and white space allowed";
-    }
-    
-    if (empty($_GET['created_at'])) {
-        echo 'Time is required'; 
-    } else {
-        echo 'time';
-    }
-*/
+
+$sql = "INSERT INTO notes_tb (title, note, author) VALUES ('$title','$note','$author')";
+
+if ($conn->query($sql) === TRUE) {
+    echo "New record created successfully";
+} else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+}
+
+// JSON
+
+
 $conn->close();
 
 
