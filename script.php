@@ -2,10 +2,8 @@
 
 
 // CONNECTION WORKS
-$servername = "localhost";
-$username = "admin";
-$password = "eP325IJeAZmR";
-$dbname = "myDB";
+
+include 'dbdetails.php';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -29,7 +27,7 @@ $clean_author = filter_var($_POST['author'], FILTER_SANITIZE_STRING);
 
 // Validating
 
-if ($clean_title === false) {
+if (!$clean_title ) {
     echo 'a title is required <br>';
 } else {
     echo 'title is valid <br>';
@@ -70,7 +68,7 @@ echo json_encode($json_array);
 // echo '<pre>';
 // print_r($json_array);
 
-
+$conn->close();
 
 include 'delete.php';
 
