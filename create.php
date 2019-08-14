@@ -1,8 +1,5 @@
 <?php
 
-
-// CONNECTION WORKS
-
 include 'dbdetails.php';
 
 // Create connection
@@ -33,13 +30,13 @@ if (!$clean_title ) {
     echo 'title is valid <br>';
 }
 
-if ($clean_note === false) {
+if (!$clean_note) {
     echo 'a note is required <br>';
 } else {
     echo 'note is valid <br>';
 }
 
-if ($clean_author === false) {
+if (!$clean_author) {
     echo 'an author is required <br>';
 } else {
     echo 'author is valid <br>';
@@ -55,22 +52,7 @@ if ($conn->query($sql) === TRUE) {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
 
-// JSON
-
-$sql = "SELECT * FROM notes_tb";
-$result = mysqli_query($conn, $sql);
-$json_array = array();
-while($row = mysqli_fetch_assoc($result)) {
-$json_array[] = $row;
-}
-echo json_encode($json_array);
-
-// echo '<pre>';
-// print_r($json_array);
-
 $conn->close();
-
-include 'delete.php';
 
 
 ?>

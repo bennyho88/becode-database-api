@@ -20,7 +20,7 @@ $title_input = $_GET['title'];
 
 $sql = "DELETE FROM notes_tb WHERE title='$title_input'";
 if (mysqli_query($conn, $sql)) {
-    echo "Record deleted succesfully";
+    echo "Record deleted succesfully <br>";
 } else {
     echo "Error deleting record: " . mysqli_error($conn);
 }

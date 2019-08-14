@@ -12,14 +12,16 @@ if (!$conn) {
 } else {
     echo "connection succeed";
 }
-/*
+
+
 // GET parameters
 
 $note_input = $_POST['note'];
-*/
+$author_input = $_POST['author'];
+$title_input = $_GET['title'];
 // Update 
 
-$sql = "UPDATE notes_tb SET author='hallo' WHERE title='test'";
+$sql = "UPDATE notes_tb SET note='$note_input', author='$author_input' WHERE title='test'";
 
 if (mysqli_query($conn, $sql)) {
     echo "Record updated successfully";

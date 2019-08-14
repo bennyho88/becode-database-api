@@ -14,21 +14,18 @@ if (!$conn) {
     echo "connection succeed";
 }
 
-// Select data 
+// Select all data in JSON
 
-$sql = "SELECT title, note, author, tijd FROM notes_tb";
+$sql = "SELECT * FROM notes_tb";
 $result = mysqli_query($conn, $sql);
+$json_array = array();
+while($row = mysqli_fetch_assoc($result)) {
+$json_array[] = $row;
+}
+// echo json_encode($json_array);
 
-if (mysqli_num_rows($result) > 0) {
-    //output data of each row
-    while ($row = mysqli_fetch_assoc($result)) {
-        $dataArray = array("title: " . $row["title"] . " - Name: " . $row["note"] . " " . $row["author"]. " " . $row["tijd"] . "<br>");
-    }
-} else {
-    echo "0 results";
-};
-
-echo json_encode($dataArray);
+echo '<pre>';
+print_r($json_array);
 
 mysqli_close($conn);
 
