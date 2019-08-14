@@ -9,11 +9,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } 
 
-// GET parameters;
-
-$title = $_GET['title'];
-$note = $_POST['note'];
-$author = $_POST['author'];
 
 // Sanitizing
 
@@ -24,33 +19,39 @@ $clean_author = filter_var($_POST['author'], FILTER_SANITIZE_STRING);
 
 // Validating
 
-if (!$clean_title ) {
-    echo 'a title is required <br>';
+$errors=[];
+
+if (empty($clean_title )) {
+    $errors['clean_title'] = 'a title is required';
 } else {
-    echo 'title is valid <br>';
+    $errors['clean_title'] ='title is valid';
 }
 
-if (!$clean_note) {
-    echo 'a note is required <br>';
+if (empty($clean_note)) {
+    $errors['clean_note'] ='a note is required';
 } else {
-    echo 'note is valid <br>';
+    $errors['clean_note'] = 'note is valid';
 }
 
-if (!$clean_author) {
-    echo 'an author is required <br>';
+if (empty($clean_author)) {
+    $errors['clean_author'] = 'an author is required';
 } else {
-    echo 'author is valid <br>';
+    $errors['clean_author'] ='author is valid';
 }
 // INSERT INTO
 
 
-$sql = "INSERT INTO notes_tb (title, note, author) VALUES ('$title','$note','$author')";
+$sql = "INSERT INTO notes_tb (title, note, author) VALUES ('$clean_title','$clean_note','$clean_author')";
 
-if ($conn->query($sql) === TRUE) {
-    echo "New record created successfully";
+if ($conn->query($sql)) {
+    $errors['confirm'] = "New record created successfully";
 } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    $errors['confirm'] =  "Error: " . $sql . "<br>" . $conn->error;
 }
+
+$errors_json = json_encode($errors);
+
+echo $errors_json;
 
 $conn->close();
 
