@@ -16,38 +16,54 @@ $clean_title = filter_var($_GET['title'], FILTER_SANITIZE_STRING);
 $clean_note = filter_var($_POST['note'], FILTER_SANITIZE_STRING);
 $clean_author = filter_var($_POST['author'], FILTER_SANITIZE_STRING);
 
+//SQL injection
+$secured_title = mysqli_real_escape_string($conn, $clean_title);
+$secured_note = mysqli_real_escape_string($conn, $clean_note);
+$secured_author = mysqli_real_escape_string($conn, $clean_author);
+
 
 // Validating
 
 $errors=[];
 
-if (empty($clean_title )) {
-    $errors['clean_title'] = 'a title is required';
+if (empty($secured_title)) {
+    $errors['title'] = 'a title is required';
 } else {
-    $errors['clean_title'] ='title is valid';
+    $errors['title'] ='title is valid';
 }
 
-if (empty($clean_note)) {
-    $errors['clean_note'] ='a note is required';
+if (empty($secured_note)) {
+    $errors['note'] ='a note is required';
 } else {
-    $errors['clean_note'] = 'note is valid';
+    $errors['note'] = 'note is valid';
 }
 
-if (empty($clean_author)) {
-    $errors['clean_author'] = 'an author is required';
+if (empty($secured_author)) {
+    $errors['author'] = 'an author is required';
 } else {
-    $errors['clean_author'] ='author is valid';
+    $errors['author'] ='author is valid';
 }
 // INSERT INTO
 
 
-$sql = "INSERT INTO notes_tb (title, note, author) VALUES ('$clean_title','$clean_note','$clean_author')";
+// $sql = "INSERT INTO notes_tb (title, note, author) VALUES ('$secured_title','$secured_note','$secured_author')";
 
-if ($conn->query($sql)) {
-    $errors['confirm'] = "New record created successfully";
+$sql = "INSERT INTO notes_tb (title, note, author) VALUES (?,?,?)";
+$stmt = mysqli_stmt_init($conn);
+if(!mysqli_stmt_prepare($stmt, $sql)) {
+    $errors['status'] = "SQL error";
 } else {
-    $errors['confirm'] =  "Error: " . $sql . "<br>" . $conn->error;
+   $errors['status'] = mysqli_stmt_bind_param($stmt, "sss",$secured_title,$secured_note,$secured_author);
+   $errors['status'] = mysqli_stmt_execute($stmt);
 }
+
+/*
+if ($conn->query($sql)) {
+    $errors['status'] = "New record created successfully";
+} else {
+    $errors['status'] =  "Error: " . $sql . "<br>" . $conn->error;
+}
+*/
 
 $errors_json = json_encode($errors);
 

@@ -19,35 +19,41 @@ $clean_title = filter_var($_GET['title'], FILTER_SANITIZE_STRING);
 $clean_note = filter_var($_POST['note'], FILTER_SANITIZE_STRING);
 $clean_author = filter_var($_POST['author'], FILTER_SANITIZE_STRING);
 
+//SQL injection
+$secured_title = mysqli_real_escape_string($conn, $clean_title);
+$secured_note = mysqli_real_escape_string($conn, $clean_note);
+$secured_author = mysqli_real_escape_string($conn, $clean_author);
+
+
 // Validating
 
 $errors=[];
 
-if (empty($clean_title )) {
-    $errors['clean_title'] = 'a title is required <br>';
+if (empty($secured_title )) {
+    $errors['title'] = 'a title is required <br>';
 } else {
-    $errors['clean_title'] ='title is valid <br>';
+    $errors['title'] ='title is valid <br>';
 }
 
-if (empty($clean_note)) {
-    $errors['clean_note'] ='a note is required <br>';
+if (empty($secured_note)) {
+    $errors['note'] ='a note is required <br>';
 } else {
-    $errors['clean_note'] = 'note is valid <br>';
+    $errors['note'] = 'note is valid <br>';
 }
 
-if (empty($clean_author)) {
-    $errors['clean_author'] = 'an author is required <br>';
+if (empty($secured_author)) {
+    $errors['author'] = 'an author is required <br>';
 } else {
-    $errors['clean_author'] ='author is valid <br>';
+    $errors['author'] ='author is valid <br>';
 }
 
 // sql to delete a record
 
-$sql = "DELETE FROM notes_tb WHERE title='$clean_title'";
+$sql = "DELETE FROM notes_tb WHERE title='$secured_title'";
 if (mysqli_query($conn, $sql)) {
-    $errors['confirm'] = "Record deleted succesfully <br>";
+    $errors['status'] = "Record deleted succesfully <br>";
 } else {
-    $errors['confirm'] = "Error deleting record: " . mysqli_error($conn);
+    $errors['status'] = "Error deleting record: " . mysqli_error($conn);
 }
 
 
